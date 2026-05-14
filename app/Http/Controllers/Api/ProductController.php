@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products=Product::all();
+        $products = Product::all();
         return response()->json($products);
     }
 
@@ -77,5 +77,11 @@ class ProductController extends Controller
                 'message' => 'Đã có lỗi xảy ra: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function show($slug)
+    {
+        $product = Product::where('slug', $slug)->firstOrFail();
+        return response()->json($product);
     }
 }
