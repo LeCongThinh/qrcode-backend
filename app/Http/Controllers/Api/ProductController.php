@@ -7,10 +7,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    public function index()
+    {
+        $products=Product::all();
+        return response()->json($products);
+    }
+
     public function store(Request $request)
     {
         // 1. Validate dữ liệu đầu vào
@@ -36,7 +41,8 @@ class ProductController extends Controller
             }
 
             // Tạo QR Code URL
-            $qrData = "http://localhost:3000/product/" . $request->sku;
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
+            $qrData = $frontendUrl . "/product/" . $request->sku;
             $encodedData = base64_encode($qrData);
             $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" . $encodedData;
 
