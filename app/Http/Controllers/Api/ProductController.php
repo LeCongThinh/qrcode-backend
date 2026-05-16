@@ -40,6 +40,12 @@ class ProductController extends Controller
                 $imageUrl = $storage->url($path);
             }
 
+            // Tạo QR Code URL
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
+            $qrData = $frontendUrl . "/product/" . $request->sku;
+            $encodedData = base64_encode($qrData);
+            $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" . $encodedData;
+
             // 2. Tạo sản phẩm bước đầu (Lúc này Model sẽ tự tạo SKU và Slug độc nhất)
             $product = Product::create([
                 'name'        => $request->name,
@@ -47,7 +53,7 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'image_url'   => $imageUrl,
                 'stock'       => $request->stock ?? 0,
-                'qr_code_url' => '', 
+                'qr_code_url' => '',
             ]);
 
             // 3. Bây giờ đã có SKU tự động từ Model, tiến hành tạo QR Code URL chính xác
